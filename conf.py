@@ -101,122 +101,140 @@
 # else:
 #     load_model = None
 
-import torch
-
-PLAY = False
-game_name = '8x8_gomoku'
-num_row = 8
-num_col = 8
-action_size = num_col * num_row
-win_k = 5  # 五子棋
-
-# ===== 模型架构 =====
-# 五子棋相对复杂，需要更强的模型
-num_res_blocks = 5  # 增加到5个残差块
-channels = 192  # 增加到256通道
-
-# ===== MCTS 搜索参数 =====
-C_puct = 1.25  # 9x9需要更多探索，略降C_puct
-device = "cuda" if torch.cuda.is_available() else "cpu"
-# 9x9五子棋搜索树很大，需要大幅增加搜索次数
-num_searches = 500  # 训练时至少600次搜索
-num_eval_searches = 1000  # 评估时1200次
-
-# ===== 训练参数 =====
-num_eval_internal = 16  # 9x9训练慢，评估间隔可以大些
-num_eval_K = 10  # 用最近10次评估平均
-warmup_iter = 150  # 延长热身期到150轮
-warmup_update_rate = 0.53  # 热身期要求稍低
-warmup_num_eval_K = 5  # 热身期用最近5次评估
-annealing_steps = 15  # 退火步数
-max_select_depth = action_size
-update_rate = 0.53  # 胜率达到53%更新（9x9更难达到高胜率）
-temperature = 1.0
-T = temperature
-
-# ===== 自对弈参数 =====
-# 9x9游戏时间较长，不要太多轮次
-num_selfplay_rounds = 1  # 减少到2轮，但增加并行游戏数
-num_parallel_games = 80  # 增加到120个并行游戏
-num_learn_iters = 200  # 增加到1500轮（9x9需要更长时间训练）
-
-# ===== 优化参数 =====
-# 根据GPU内存调整
-if torch.cuda.is_available() and torch.cuda.get_device_properties(0).total_memory >= 16e9:  # 16GB以上
-    batch_size = 512
-else:
-    batch_size = 256  # 保守选择
-
-epsilon = 0.15  # 减少Dirichlet噪声（9x9更需要精确搜索）
-alpha = 0.8  # Dirichlet参数
-lr = 2e-4  # 学习率可以稍大，前期学习更快
-weight_decay = 3e-5  # 权重衰减
-
-# ===== 对战参数 =====
-if PLAY:
-    load_model = "best_model_9x9_gomoku.pth"
-    temperature = 0.05  # 非常小的温度
-    epsilon = 0
-    num_searches = 2000  # 对战时2000次搜索
-else:
-    load_model = None
-
 # import torch
 
 # PLAY = False
-# game_name = '9x9_gomoku'
-# num_row = 9
-# num_col = 9
+# game_name = '15x15_gomoku'
+# num_row = 15
+# num_col = 15
 # action_size = num_col * num_row
 # win_k = 5  # 五子棋
 
 # # ===== 模型架构 =====
 # # 五子棋相对复杂，需要更强的模型
-# num_res_blocks = 5  # 增加到5个残差块
-# channels = 256  # 增加到256通道
+# num_res_blocks = 5
+# channels = 192
 
 # # ===== MCTS 搜索参数 =====
-# C_puct = 1.25  # 9x9需要更多探索，略降C_puct
+# C_puct = 1.25
 # device = "cuda" if torch.cuda.is_available() else "cpu"
-# # 9x9五子棋搜索树很大，需要大幅增加搜索次数
-# num_searches = 600  # 训练时至少600次搜索
-# num_eval_searches = 1200  # 评估时1200次
+# num_searches = 500
+# num_eval_searches = 1000
 
 # # ===== 训练参数 =====
-# num_eval_internal = 16  # 9x9训练慢，评估间隔可以大些
-# num_eval_K = 10  # 用最近10次评估平均
-# warmup_iter = 150  # 延长热身期到150轮
-# warmup_update_rate = 0.53  # 热身期要求稍低
-# warmup_num_eval_K = 5  # 热身期用最近5次评估
-# annealing_steps = 15  # 退火步数
+# num_eval_internal = 16
+# num_eval_rounds = 1  # 每次评估双方各先手的局数
+# num_eval_K = 10
+# warmup_iter = 150
+# warmup_update_rate = 0.53
+# warmup_num_eval_K = 5
+# annealing_steps = 15
 # max_select_depth = action_size
-# update_rate = 0.53  # 胜率达到53%更新（9x9更难达到高胜率）
+# update_rate = 0.53
 # temperature = 1.0
 # T = temperature
 
 # # ===== 自对弈参数 =====
-# # 9x9游戏时间较长，不要太多轮次
-# num_selfplay_rounds = 1  # 减少到2轮，但增加并行游戏数
-# num_parallel_games = 150  # 增加到120个并行游戏
-# num_learn_iters = 200  # 增加到1500轮（9x9需要更长时间训练）
+# num_selfplay_rounds = 1
+# num_parallel_games = 80
+# num_learn_iters = 200
 
 # # ===== 优化参数 =====
-# # 根据GPU内存调整
-# if torch.cuda.is_available() and torch.cuda.get_device_properties(0).total_memory >= 16e9:  # 16GB以上
+# if torch.cuda.is_available() and torch.cuda.get_device_properties(0).total_memory >= 16e9:
 #     batch_size = 512
 # else:
-#     batch_size = 256  # 保守选择
+#     batch_size = 256
 
-# epsilon = 0.15  # 减少Dirichlet噪声（9x9更需要精确搜索）
-# alpha = 0.8  # Dirichlet参数
-# lr = 2e-4  # 学习率可以稍大，前期学习更快
-# weight_decay = 3e-5  # 权重衰减
+# epsilon = 0.15
+# alpha = 0.8
+# lr = 2e-4
+# weight_decay = 3e-5
+
+# # ===== Profiling（可选）=====
+# enable_profiling = False
+# profile_output = "profile.txt"
+# profile_every = 1
 
 # # ===== 对战参数 =====
 # if PLAY:
-#     load_model = "best_model_9x9_gomoku.pth"
-#     temperature = 0.05  # 非常小的温度
+#     load_model = "best_model_15x15_gomoku.pth"
+#     temperature = 0.05
 #     epsilon = 0
-#     num_searches = 2000  # 对战时2000次搜索
+#     num_searches = 2000
 # else:
 #     load_model = None
+
+import torch
+
+PLAY = False
+game_name = '15x15_gomoku'
+num_row = 15
+num_col = 15
+action_size = num_col * num_row
+win_k = 5  # 五子棋
+
+# ===== 模型架构 =====
+num_res_blocks = 10
+channels = 256
+
+# ===== MCTS 搜索参数 =====
+C_puct = 1.25
+device = "cuda" if torch.cuda.is_available() else "cpu"
+num_searches = 800
+num_eval_searches = 1600
+
+# ===== 训练参数 =====
+num_eval_internal = 16
+num_eval_rounds = 2
+num_eval_K = 10
+warmup_iter = 150
+warmup_update_rate = 0.53
+warmup_num_eval_K = 5
+annealing_steps = 15
+max_select_depth = action_size
+update_rate = 0.53
+temperature = 1.0
+T = temperature
+
+# ===== 自对弈参数 =====
+num_selfplay_rounds = 1
+num_parallel_games = 96
+num_learn_iters = 1500
+
+# ===== 优化参数 =====
+if torch.cuda.is_available() and torch.cuda.get_device_properties(0).total_memory >= 16e9:
+    batch_size = 512
+else:
+    batch_size = 256
+epsilon = 0.15
+alpha = 0.8
+lr = 2e-4
+weight_decay = 5e-5
+
+# ===== 对战参数 =====
+if PLAY:
+    load_model = "best_model_15x15_gomoku.pth"
+    temperature = 0.05
+    epsilon = 0
+    num_searches = 800
+else:
+    load_model = None
+
+# ===== Profiling（可选）=====
+enable_profiling = True
+profile_output = "profile.txt"
+profile_every = 1
+
+# ===== 推理缓存（可选）=====
+enable_nn_cache = True
+nn_cache_max = 200000
+
+# ===== MCTS 加速（可选）=====
+enable_numba = True
+enable_async_expand = True
+expand_batch_size = 64
+
+# ===== GPU 推理加速（可选）=====
+enable_torch_compile = True
+enable_amp_inference = True
+amp_dtype = "float16"

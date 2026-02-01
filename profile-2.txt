@@ -1,0 +1,162 @@
+--------------------total=24.9268s
+selfplay_parallel/mcts: 9.5417s | count=25 | avg=0.381669s
+mcts/expand_parallel: 5.6257s | count=722 | avg=0.007792s
+mcts/select_parallel: 4.7742s | count=9040 | avg=0.000528s
+mcts/expand_parallel/nn: 2.6309s | count=594 | avg=0.004429s
+eval/mcts: 1.5688s | count=22 | avg=0.071309s
+mcts/backup_parallel: 0.5376s | count=722 | avg=0.000745s
+train/nn: 0.2165s | count=33 | avg=0.006560s
+mcts/expand_parallel/root: 0.0314s | count=3 | avg=0.010468s
+--------------------total=17.2248s
+selfplay_parallel/mcts: 6.6829s | count=25 | avg=0.267315s
+mcts/expand_parallel: 4.4883s | count=690 | avg=0.006505s
+mcts/select_parallel: 2.6648s | count=9040 | avg=0.000295s
+mcts/expand_parallel/nn: 1.6471s | count=438 | avg=0.003761s
+eval/mcts: 1.0780s | count=22 | avg=0.049000s
+mcts/backup_parallel: 0.4711s | count=690 | avg=0.000683s
+train/nn: 0.1865s | count=30 | avg=0.006218s
+mcts/expand_parallel/root: 0.0061s | count=3 | avg=0.002043s
+--------------------total=18.9780s
+selfplay_parallel/mcts: 7.6181s | count=25 | avg=0.304725s
+mcts/expand_parallel: 4.8558s | count=748 | avg=0.006492s
+mcts/select_parallel: 3.1348s | count=9040 | avg=0.000347s
+mcts/expand_parallel/nn: 1.7012s | count=496 | avg=0.003430s
+eval/mcts: 0.9558s | count=22 | avg=0.043447s
+mcts/backup_parallel: 0.4589s | count=748 | avg=0.000613s
+train/nn: 0.2484s | count=35 | avg=0.007096s
+mcts/expand_parallel/root: 0.0050s | count=3 | avg=0.001658s
+--------------------total=14.3418s
+selfplay_parallel/mcts: 5.5474s | count=25 | avg=0.221895s
+mcts/expand_parallel: 3.7257s | count=659 | avg=0.005653s
+mcts/select_parallel: 2.2232s | count=9040 | avg=0.000246s
+mcts/expand_parallel/nn: 1.3303s | count=404 | avg=0.003293s
+eval/mcts: 0.9074s | count=22 | avg=0.041244s
+mcts/backup_parallel: 0.3946s | count=659 | avg=0.000599s
+train/nn: 0.2081s | count=28 | avg=0.007431s
+mcts/expand_parallel/root: 0.0052s | count=3 | avg=0.001732s
+--------------------total=19.0595s
+selfplay_parallel/mcts: 7.0061s | count=25 | avg=0.280242s
+mcts/expand_parallel: 4.8843s | count=666 | avg=0.007334s
+mcts/select_parallel: 2.9416s | count=9040 | avg=0.000325s
+mcts/expand_parallel/nn: 1.9019s | count=409 | avg=0.004650s
+eval/mcts: 1.4734s | count=22 | avg=0.066973s
+mcts/backup_parallel: 0.5022s | count=666 | avg=0.000754s
+train/nn: 0.3428s | count=29 | avg=0.011820s
+mcts/expand_parallel/root: 0.0073s | count=3 | avg=0.002436s
+--------------------total=19.3792s
+selfplay_parallel/mcts: 7.4474s | count=25 | avg=0.297898s
+mcts/expand_parallel: 4.7921s | count=706 | avg=0.006788s
+mcts/select_parallel: 3.2708s | count=9040 | avg=0.000362s
+mcts/expand_parallel/nn: 1.7010s | count=442 | avg=0.003848s
+eval/mcts: 1.3179s | count=22 | avg=0.059903s
+mcts/backup_parallel: 0.5480s | count=706 | avg=0.000776s
+train/nn: 0.2959s | count=33 | avg=0.008967s
+mcts/expand_parallel/root: 0.0062s | count=3 | avg=0.002063s
+--------------------total=29.2841s
+selfplay_parallel/mcts: 11.7760s | count=25 | avg=0.471038s
+mcts/expand_parallel: 8.2700s | count=687 | avg=0.012038s
+mcts/select_parallel: 3.8831s | count=9040 | avg=0.000430s
+mcts/expand_parallel/nn: 3.2468s | count=408 | avg=0.007958s
+eval/mcts: 1.0626s | count=22 | avg=0.048301s
+mcts/backup_parallel: 0.5231s | count=687 | avg=0.000761s
+train/nn: 0.5153s | count=30 | avg=0.017178s
+mcts/expand_parallel/root: 0.0071s | count=3 | avg=0.002382s
+--------------------total=16.8956s
+selfplay_parallel/mcts: 6.7939s | count=25 | avg=0.271757s
+mcts/expand_parallel: 4.4371s | count=666 | avg=0.006662s
+mcts/select_parallel: 2.7565s | count=9040 | avg=0.000305s
+mcts/expand_parallel/nn: 1.3025s | count=376 | avg=0.003464s
+eval/mcts: 0.9349s | count=22 | avg=0.042496s
+mcts/backup_parallel: 0.4142s | count=666 | avg=0.000622s
+train/nn: 0.2502s | count=29 | avg=0.008629s
+mcts/expand_parallel/root: 0.0062s | count=3 | avg=0.002062s
+--------------------total=14.9520s
+selfplay_parallel/mcts: 5.8843s | count=24 | avg=0.245178s
+mcts/expand_parallel: 3.8993s | count=650 | avg=0.005999s
+mcts/select_parallel: 2.3919s | count=8960 | avg=0.000267s
+mcts/expand_parallel/nn: 1.2585s | count=364 | avg=0.003457s
+eval/mcts: 0.9245s | count=22 | avg=0.042021s
+mcts/backup_parallel: 0.3971s | count=650 | avg=0.000611s
+train/nn: 0.1878s | count=28 | avg=0.006708s
+mcts/expand_parallel/root: 0.0087s | count=3 | avg=0.002914s
+--------------------total=16.7368s
+selfplay_parallel/mcts: 6.7123s | count=24 | avg=0.279681s
+mcts/expand_parallel: 4.2521s | count=692 | avg=0.006145s
+mcts/select_parallel: 2.8326s | count=8960 | avg=0.000316s
+mcts/expand_parallel/nn: 1.3594s | count=403 | avg=0.003373s
+eval/mcts: 0.9125s | count=22 | avg=0.041476s
+mcts/backup_parallel: 0.4249s | count=692 | avg=0.000614s
+train/nn: 0.2364s | count=32 | avg=0.007387s
+mcts/expand_parallel/root: 0.0066s | count=3 | avg=0.002212s
+--------------------total=16.0501s
+selfplay_parallel/mcts: 6.3405s | count=24 | avg=0.264186s
+mcts/expand_parallel: 4.0580s | count=646 | avg=0.006282s
+mcts/select_parallel: 2.7001s | count=8960 | avg=0.000301s
+mcts/expand_parallel/nn: 1.3331s | count=389 | avg=0.003427s
+eval/mcts: 0.9765s | count=22 | avg=0.044386s
+mcts/backup_parallel: 0.4369s | count=646 | avg=0.000676s
+train/nn: 0.1964s | count=29 | avg=0.006773s
+mcts/expand_parallel/root: 0.0087s | count=3 | avg=0.002899s
+--------------------total=12.4391s
+selfplay_parallel/mcts: 4.7921s | count=24 | avg=0.199672s
+mcts/expand_parallel: 3.1326s | count=589 | avg=0.005319s
+mcts/select_parallel: 2.0854s | count=8960 | avg=0.000233s
+mcts/expand_parallel/nn: 1.0017s | count=299 | avg=0.003350s
+eval/mcts: 0.8964s | count=22 | avg=0.040743s
+mcts/backup_parallel: 0.3647s | count=589 | avg=0.000619s
+train/nn: 0.1616s | count=25 | avg=0.006464s
+mcts/expand_parallel/root: 0.0046s | count=3 | avg=0.001541s
+--------------------total=14.8708s
+selfplay_parallel/mcts: 5.8447s | count=25 | avg=0.233789s
+mcts/expand_parallel: 3.8020s | count=612 | avg=0.006212s
+mcts/select_parallel: 2.4746s | count=9040 | avg=0.000274s
+mcts/expand_parallel/nn: 1.2060s | count=332 | avg=0.003633s
+eval/mcts: 0.9548s | count=22 | avg=0.043400s
+mcts/backup_parallel: 0.4042s | count=612 | avg=0.000660s
+train/nn: 0.1793s | count=26 | avg=0.006895s
+mcts/expand_parallel/root: 0.0052s | count=3 | avg=0.001726s
+--------------------total=14.6855s
+selfplay_parallel/mcts: 5.7679s | count=25 | avg=0.230718s
+mcts/expand_parallel: 3.7158s | count=642 | avg=0.005788s
+mcts/select_parallel: 2.4751s | count=9040 | avg=0.000274s
+mcts/expand_parallel/nn: 1.1788s | count=355 | avg=0.003321s
+eval/mcts: 0.9396s | count=22 | avg=0.042708s
+mcts/backup_parallel: 0.4057s | count=642 | avg=0.000632s
+train/nn: 0.1977s | count=28 | avg=0.007062s
+mcts/expand_parallel/root: 0.0047s | count=3 | avg=0.001569s
+--------------------total=16.9169s
+selfplay_parallel/mcts: 6.7616s | count=25 | avg=0.270462s
+mcts/expand_parallel: 4.2470s | count=650 | avg=0.006534s
+mcts/select_parallel: 2.9336s | count=9040 | avg=0.000325s
+mcts/expand_parallel/nn: 1.3416s | count=358 | avg=0.003747s
+eval/mcts: 0.9797s | count=22 | avg=0.044532s
+mcts/backup_parallel: 0.4358s | count=650 | avg=0.000670s
+train/nn: 0.2109s | count=29 | avg=0.007272s
+mcts/expand_parallel/root: 0.0068s | count=3 | avg=0.002281s
+--------------------total=16.9321s
+selfplay_parallel/mcts: 6.7097s | count=24 | avg=0.279572s
+mcts/expand_parallel: 4.3182s | count=668 | avg=0.006464s
+mcts/select_parallel: 2.7807s | count=8960 | avg=0.000310s
+mcts/expand_parallel/nn: 1.4814s | count=381 | avg=0.003888s
+eval/mcts: 0.9622s | count=22 | avg=0.043738s
+mcts/backup_parallel: 0.4497s | count=668 | avg=0.000673s
+train/nn: 0.2253s | count=30 | avg=0.007512s
+mcts/expand_parallel/root: 0.0049s | count=3 | avg=0.001619s
+--------------------total=14.1721s
+selfplay_parallel/mcts: 5.5313s | count=25 | avg=0.221252s
+mcts/expand_parallel: 3.4574s | count=635 | avg=0.005445s
+mcts/select_parallel: 2.5014s | count=9040 | avg=0.000277s
+mcts/expand_parallel/nn: 1.1343s | count=344 | avg=0.003297s
+eval/mcts: 0.9445s | count=22 | avg=0.042934s
+mcts/backup_parallel: 0.4058s | count=635 | avg=0.000639s
+train/nn: 0.1922s | count=28 | avg=0.006865s
+mcts/expand_parallel/root: 0.0052s | count=3 | avg=0.001722s
+--------------------total=15.5552s
+selfplay_parallel/mcts: 6.1040s | count=25 | avg=0.244162s
+mcts/expand_parallel: 3.9337s | count=639 | avg=0.006156s
+mcts/select_parallel: 2.5820s | count=9040 | avg=0.000286s
+mcts/expand_parallel/nn: 1.3355s | count=346 | avg=0.003860s
+eval/mcts: 0.9638s | count=22 | avg=0.043808s
+mcts/backup_parallel: 0.4310s | count=639 | avg=0.000674s
+train/nn: 0.1998s | count=28 | avg=0.007135s
+mcts/expand_parallel/root: 0.0054s | count=3 | avg=0.001795s

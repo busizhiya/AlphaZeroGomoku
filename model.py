@@ -81,6 +81,11 @@ if conf.load_model :
     print("load",conf.load_model)
     alphaZeroNet.load_state_dict(torch.load(conf.load_model))
 alphaZeroNet.to(conf.device)
+if conf.enable_torch_compile:
+    try:
+        alphaZeroNet = torch.compile(alphaZeroNet)
+    except Exception as e:
+        print(f"torch.compile failed, fallback to eager: {e}")
 if __name__ == '__main__':
     state = torch.zeros(1, 3, 7, 7)
 

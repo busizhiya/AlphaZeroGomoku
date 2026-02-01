@@ -11,7 +11,9 @@ import utils
 from datetime import datetime
 import copy
 import gc
+from profiler import profiler
 device = conf.device
+profiler.set_enabled(conf.enable_profiling)
 
 
 
@@ -47,7 +49,8 @@ class TrainManager:
             step = 0
             while len(spGames) > 0:
                 step += 1
-                pis = self.mcts.search(spGames)
+                with profiler.section("selfplay_parallel/mcts"):
+                    pis = self.mcts.search(spGames)
                 movables = self.game.get_valid_moves(np.array([spg.root.state for spg in spGames]))
                 if step >= conf.annealing_steps:
                     T = 0
@@ -74,9 +77,10 @@ class TrainManager:
                             state, pi, value = sample[0], sample[1], value
                             memoryReturn.append((sample[0],sample[1],value))
                             if self.data_augmentation_enabled:
-                                # 随机选择几种变换添加
-                                pi_matrix = pi.reshape(conf.num_row,conf.num_col)
+                                # 使用全部 8 种对称变换，提升稳定性与泛化
+                                pi_matrix = pi.reshape(conf.num_row, conf.num_col)
                                 transforms = [
+                                    (state, pi_matrix),  # 原始
                                     (np.rot90(state, 1), np.rot90(pi_matrix, 1)),  # 旋转90度
                                     (np.rot90(state, 2), np.rot90(pi_matrix, 2)),  # 旋转180度
                                     (np.rot90(state, 3), np.rot90(pi_matrix, 3)),  # 旋转270度
@@ -85,17 +89,10 @@ class TrainManager:
                                     (np.transpose(state), np.transpose(pi_matrix)),  # 转置
                                     (np.fliplr(np.rot90(state, 1)), np.fliplr(np.rot90(pi_matrix, 1))),  # 旋转90度+水平翻转
                                 ]
-                                
-                                # 随机选择2-4种变换添加
-                                num_augments = random.randint(2,4)
-                                selected = random.sample(transforms, num_augments)
-                                
-                                for aug_state, aug_pi_matrix in selected:
-                                    memoryReturn.append((
-                                        aug_state.copy(),
-                                        aug_pi_matrix.flatten(),
-                                        value  # 价值不变
-                                    ))
+                                for aug_state, aug_pi_matrix in transforms:
+                                    memoryReturn.append(
+                                        (aug_state.copy(), aug_pi_matrix.flatten(), value)
+                                    )
                             value *= -1
                         del spGames[i]
         round_bar.close()
@@ -109,7 +106,8 @@ class TrainManager:
             root = MCTS.Node(self.game.get_init_state(), -1)
             T = self.iter_T
             while True:
-                pi = self.mcts.search(root)
+                with profiler.section("selfplay/mcts"):
+                    pi = self.mcts.search(root)
                 movables = self.game.get_valid_moves(root.state)
                 pi[movables==0] = 0
                 pi /= np.sum(pi)
@@ -122,6 +120,8 @@ class TrainManager:
                     pi /= np.sum(pi)
                     action = np.random.choice(self.game.action_size,p=pi)
                 new_node = root.get_child(action)
+                root.clear_child()
+                new_node.clear_parent()
                 
                 is_terminal, value = self.game.is_terminal(new_node.state, action)
                 root = new_node
@@ -147,7 +147,8 @@ class TrainManager:
             states = np.array([sample[0] for sample in batch])
             pi = torch.tensor(np.array([sample[1] for sample in batch]),device=conf.device)
             z = torch.tensor([sample[2] for sample in batch],device=conf.device,dtype=torch.float).reshape(-1, 1)
-            P, v = self.model(self.game.encode(states))
+            with profiler.section("train/nn"):
+                P, v = self.model(self.game.encode(states))
             logp = F.log_softmax(P, dim=1)
             policy_loss = -(pi * logp).sum(dim=1).mean()
             loss = policy_loss + F.mse_loss(v, z)
@@ -202,7 +203,7 @@ class TrainManager:
     #     round_bar.close()
     #     return 1 if (win_cnt[0] + win_cnt[1])==0 else win_cnt[0] / (win_cnt[0] + win_cnt[1])
     def eval(self):
-        num_eval_rounds = 1  # 每个模型先手一局
+        num_eval_rounds = conf.num_eval_rounds
         self.model.eval()
         self.best_model.eval()
 
@@ -211,13 +212,13 @@ class TrainManager:
         best_mcts = MCTS.MCTS_Parallel(conf.num_eval_searches, num_eval_rounds, self.best_model, epsilon=0)
 
         # 创建两局 SPG
-        spGames = [
-            SPG(self.game),  # 局1，新模型先手
-            SPG(self.game),  # 局2，旧模型先手
-        ]
+        spGames = []
+        for _ in range(num_eval_rounds):
+            spGames.append(SPG(self.game))  # 新模型先手
+            spGames.append(SPG(self.game))  # 旧模型先手
 
-        first_player = [0, 1]  # 0 -> 新模型先手，1 -> 旧模型先手
-        win_results = [-1, -1]  # -1未结束, 1新模型赢, 0旧模型赢, 0.5平局
+        first_player = [0, 1] * num_eval_rounds
+        win_results = [-1] * (2 * num_eval_rounds)
         step = 0
         train_bar = tqdm(range(1),leave=False,position=1,desc=f"Evaling...")
         while any(w == -1 for w in win_results):
@@ -240,8 +241,9 @@ class TrainManager:
             best_spgs = [spg for spg, side in zip(active_spgs, active_sides) if side == 1]
 
             # 批量搜索
-            cur_pis = cur_mcts.search(cur_spgs) if cur_spgs else []
-            best_pis = best_mcts.search(best_spgs) if best_spgs else []
+            with profiler.section("eval/mcts"):
+                cur_pis = cur_mcts.search(cur_spgs) if cur_spgs else []
+                best_pis = best_mcts.search(best_spgs) if best_spgs else []
 
             # 合并结果，顺序和 active_indices 对齐
             pi_dict = {}
@@ -313,6 +315,9 @@ class TrainManager:
                     rate = np.array(win_rates[-conf.num_eval_K:]).mean()
                 self.update(iter, rate)
                 iter_bar.set_description(f"Iter {iter}/{num_learn_iters},len={len(data)},loss={loss:.2f}, v={self.version} rate={rate:.2f}")
+                if conf.enable_profiling and (iter + 1) % conf.profile_every == 0:
+                    profiler.dump(conf.profile_output)
+                    profiler.reset()
                 if (iter+1) % conf.num_eval_internal == 0:
                     current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
                     filename = f"model_{conf.game_name}_{current_time}_iter_{iter}.pth"
